@@ -23,12 +23,11 @@ public class ClientMain {
 		try {
 			
 			for(int i = 0; i < 10; i++) {
-				int contador = 10000;
+				int contador = 2500;
 				long elapsedTime = 0;
 				while(contador-- > 0) {
-					System.out.println("RODOU");
 					long currentTime = System.currentTimeMillis();
-					voting.vote(1);
+					voting.calculation();
 					elapsedTime += System.currentTimeMillis() - currentTime;
 				}
 				System.out.println(elapsedTime);

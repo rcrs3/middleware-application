@@ -13,16 +13,17 @@ public class ServerRequestHandler {
 	//tcp
 	private DataInputStream inFromClient;
 	private DataOutputStream outToClient;
-
+	private Socket socket;
+	private ServerSocket serverSocketTcp;
 	
 	public ServerRequestHandler(int port) throws IOException, TimeoutException {
 		super();
 		this.port = port;
 		
-		ServerSocket serverSocketTcp = new ServerSocket(port);
-		Socket socket = serverSocketTcp.accept();
-		inFromClient = new DataInputStream(socket.getInputStream());
-		outToClient = new DataOutputStream(socket.getOutputStream());
+		serverSocketTcp = new ServerSocket(port);
+		
+		
+		
 			
 	}
 
@@ -37,16 +38,20 @@ public class ServerRequestHandler {
 	}
 
 	private byte[] receiveTcp() throws IOException {
+		socket = serverSocketTcp.accept();
+		inFromClient = new DataInputStream(socket.getInputStream());
 		
 		int receivedMessageSize = inFromClient.readInt();
-		System.out.println("RECEIVE1");
+		
 		byte[] msg = new byte[receivedMessageSize];
 		inFromClient.read(msg, 0, receivedMessageSize);
-		System.out.println("RECEIVE2");
+		
 		return msg;
 	}
 
 	public void sendTcp(byte[] msg) throws IOException, InterruptedException {
+		outToClient = new DataOutputStream(socket.getOutputStream());
+		
 		outToClient.writeInt(msg.length);
 		outToClient.write(msg, 0, msg.length);
 	}
