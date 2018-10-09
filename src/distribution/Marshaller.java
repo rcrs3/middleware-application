@@ -20,7 +20,7 @@ public class Marshaller {
 	public static Object unmarshall(byte[] obj) throws ClassNotFoundException, IOException  {
 		ByteArrayInputStream byteArrayInput = new ByteArrayInputStream(obj);
 		ObjectInput objInput = new ObjectInputStream(byteArrayInput);
-		
+
 		return objInput.readObject();		
 	}	
 }

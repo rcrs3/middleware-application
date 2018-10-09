@@ -35,7 +35,7 @@ public class VotingInvoker {
 				
 			}
 
-			requestHandler.send(Marshaller.marshall(result));
+			this.requestHandler.send(Marshaller.marshall(result));
 		}
 	}
 	

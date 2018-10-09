@@ -21,54 +21,18 @@ public class ClientMain {
 		int candidate = 0;
 		
 		try {
-			BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
 			
-			while (input != null) {
-				String result = "";
-				System.out.println("Type 1-3 for your desired operation:");
-				System.out.println("1. Vote");
-				System.out.println("2. Candidates Availables");
-				System.out.println("3. Vote Calculation");
-				System.out.println("4. Exit");
-				
-				try {
-					input = in.readLine();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+			for(int i = 0; i < 10; i++) {
+				int contador = 10000;
+				long elapsedTime = 0;
+				while(contador-- > 0) {
+					System.out.println("RODOU");
+					long currentTime = System.currentTimeMillis();
+					voting.vote(1);
+					elapsedTime += System.currentTimeMillis() - currentTime;
 				}
-			
-				if(input.compareTo("4") == 0) {
-					System.out.println("Goodbye!");
-					System.exit(0);
-				}
-			
-							
-				if (input != null) {
-					switch (input.toLowerCase()) {
-					case "1":
-					case "vote":
-						candidate = Integer.parseInt(in.readLine());
-						result = voting.vote(candidate);
-						break;
-					case "2":
-					case "candidates":
-						result = voting.getCandidates();
-						break;
-					case "3":
-					case "calculation":
-						result = voting.calculation();
-						break;
-				
-					default:
-						System.out.println("Operação inválida!");
-					}				
-				
-					System.out.println(result);
-					System.out.println();
-				}				
-			} 
-		
+				System.out.println(elapsedTime);
+			}
 		} catch(Exception e) {
 			e.printStackTrace();
 		} catch (Throwable e) {

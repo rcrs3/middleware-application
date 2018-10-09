@@ -3,12 +3,7 @@ package crh;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
-import java.nio.ByteBuffer;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.BlockingQueue;
+
 import java.util.concurrent.TimeoutException;
 
 import java.net.Socket;
@@ -17,13 +12,20 @@ public class ClientRequestHandler {
 
 	private String host;
 	private int port;
-	private DatagramSocket clientSocket;
-	private byte[] msgReceived;
-	private int receivedMessageSize;
+	
+	//tcp
+	private Socket socket;
+	private DataInputStream inFromServer;
+	private DataOutputStream outToServer;
 
-	public ClientRequestHandler(String host, int port) {
+
+	public ClientRequestHandler(String host, int port) throws IOException, TimeoutException {
 		this.host = host;
 		this.port = port;
+
+		this.socket = new Socket(host, port);
+		this.inFromServer = new DataInputStream(socket.getInputStream());
+		this.outToServer = new DataOutputStream(socket.getOutputStream());
 	}
 
 	public void send(byte[] msg) throws IOException, InterruptedException, TimeoutException {
@@ -32,21 +34,19 @@ public class ClientRequestHandler {
 	}
 
 	public byte[] receive() throws Exception {
-		return this.msgReceived;
+		return receiveTcp();
 		
 	}
 
 	public void sendTcp(byte[] msg) throws IOException, InterruptedException {
-		Socket socket = new Socket(this.host, this.port);
-		DataOutputStream outToServer = new DataOutputStream(socket.getOutputStream());
-		DataInputStream inFromServer = new DataInputStream(socket.getInputStream());
 		outToServer.writeInt(msg.length);
-		outToServer.write(msg);
-		this.receivedMessageSize = inFromServer.readInt();
-		msgReceived = new byte[this.receivedMessageSize];
-		
-		inFromServer.read(this.msgReceived);
-		socket.close();
+		outToServer.write(msg, 0 , msg.length);
 	}
 
+	public byte[] receiveTcp() throws IOException {
+        int receivedMessageSize = inFromServer.readInt();
+        byte[] msgReceived = new byte[receivedMessageSize];
+        inFromServer.read(msgReceived, 0, receivedMessageSize);
+        return msgReceived;
+    }
 }
